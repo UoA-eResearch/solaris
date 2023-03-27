@@ -244,7 +244,7 @@ class RasterTiler(object):
                 "nodata value threshold supplied, filtering based on this percentage."
             )
             new_tile_bounds = []
-            for tile_data, mask, profile, tb in tqdm(tile_gen):
+            for tile_data, mask, profile, tb in tile_gen:
                 nodata_count = np.logical_or.reduce(
                     (tile_data == profile["nodata"]), axis=0
                 ).sum()
@@ -263,7 +263,7 @@ class RasterTiler(object):
                     )
             self.tile_bounds = new_tile_bounds  # only keep the tile bounds that make it past the nodata threshold
         else:
-            for tile_data, mask, profile, tb in tqdm(tile_gen):
+            for tile_data, mask, profile, tb in tile_gen:
                 dest_path = self.save_tile(tile_data, mask, profile, dest_fname_base)
                 self.tile_paths.append(dest_path)
         if self.verbose:
@@ -406,8 +406,9 @@ class RasterTiler(object):
                     width=self.src_tile_size[1],
                     height=self.src_tile_size[0]
                 )
-                print("reading data from window")
-                print(self.nodata)
+                if self.verbose:
+                    print("reading data from window")
+                    print(self.nodata)
                 if self.src.count != 1:
                     src_data = self.src.read(
                         window=window,
