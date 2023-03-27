@@ -402,9 +402,7 @@ class RasterTiler(object):
             if True:  # not self.is_cog or self.force_load_cog:
                 window = rasterio.windows.from_bounds(
                     *tb,
-                    transform=self.src.transform,
-                    width=self.src_tile_size[1],
-                    height=self.src_tile_size[0]
+                    transform=self.src.transform
                 )
                 if self.verbose:
                     print("reading data from window")

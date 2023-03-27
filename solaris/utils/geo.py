@@ -619,7 +619,7 @@ def _split_multigeom_row(gdf_row, geom_col):
 
 
 def _split_multigeom(multigeom):
-    return list(multigeom)
+    return list(multigeom.geoms)
 
 
 def _reduce_geom_precision(geom, precision=2):
