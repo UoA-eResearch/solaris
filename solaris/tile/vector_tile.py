@@ -114,7 +114,7 @@ class VectorTiler(object):
             obj_id_col=obj_id_col,
         )
         self.tile_paths = []
-        for tile_gdf, tb in tqdm(tile_gen):
+        for tile_gdf, tb in tile_gen:
             if self.proj_unit not in ["meter", "metre"]:
                 dest_path = os.path.join(
                     self.dest_dir,
