@@ -132,7 +132,7 @@ def affine_transform_gdf(
             raise ValueError("The file format is incompatible with this function.")
     if "geometry" not in gdf.columns:
         gdf = gdf.rename(columns={geom_col: "geometry"})
-    if not isinstance(gdf["geometry"][0], Polygon):
+    if not isinstance(gdf["geometry"].iloc[0], Polygon):
         gdf["geometry"] = gdf["geometry"].apply(shapely.wkt.loads)
     gdf["geometry"] = gdf["geometry"].apply(
         convert_poly_coords, affine_obj=affine_obj, inverse=inverse
