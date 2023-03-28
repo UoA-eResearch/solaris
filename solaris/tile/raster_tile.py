@@ -523,6 +523,7 @@ class RasterTiler(object):
         #     dest_path = os.path.join(self.dest_dir, 'tmp.tif')
         # else:
         dest_path = os.path.join(self.dest_dir, dest_fname)
+        profile["dtype"] = "uint8"
 
         with rasterio.open(dest_path, "w", **profile) as dest:
             if profile["count"] == 1:
