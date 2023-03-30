@@ -547,6 +547,8 @@ def split_multi_geometries(gdf, obj_id_col=None, group_col=None, geom_col="geome
     split_geoms_gdf = pd.concat(
         gdf2.apply(_split_multigeom_row, axis=1, geom_col=geom_col).tolist()
     )
+    if len(split_geoms_gdf):
+        split_geoms_gdf = gpd.GeoDataFrame(split_geoms_gdf, geometry="geometry", crs=gdf2.crs)
     gdf2 = gdf2.drop(index=split_geoms_gdf.index.unique())  # remove multipolygons
     gdf2 = gpd.GeoDataFrame(
         pd.concat([gdf2, split_geoms_gdf], ignore_index=True), crs=gdf2.crs
@@ -609,7 +611,7 @@ def _split_multigeom_row(gdf_row, geom_col):
     new_rows = []
     if isinstance(gdf_row[geom_col], MultiPolygon) or isinstance(
         gdf_row[geom_col], MultiLineString
-    ):
+    ) or isinstance(gdf_row[geom_col], GeometryCollection):
         new_polys = _split_multigeom(gdf_row[geom_col])
         for poly in new_polys:
             row_w_poly = gdf_row.copy()
@@ -619,7 +621,7 @@ def _split_multigeom_row(gdf_row, geom_col):
 
 
 def _split_multigeom(multigeom):
-    return list(multigeom.geoms)
+    return [g for g in multigeom.geoms if isinstance(g, Polygon)]
 
 
 def _reduce_geom_precision(geom, precision=2):

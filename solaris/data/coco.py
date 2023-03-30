@@ -216,6 +216,10 @@ def geojson2coco(
         logger.debug("Reading in {}".format(gj))
         curr_gdf = gpd.read_file(gj)
 
+        if len(curr_gdf) == 0:
+            print(f"{gj} is empty")
+            continue
+
         if remove_all_multipolygons is True and explode_all_multipolygons is True:
             raise ValueError(
                 "Only one of remove_all_multipolygons or explode_all_multipolygons can be set to True."
@@ -223,7 +227,14 @@ def geojson2coco(
         if remove_all_multipolygons is True and explode_all_multipolygons is False:
             curr_gdf = remove_multipolygons(curr_gdf)
         elif explode_all_multipolygons is True:
-            curr_gdf = split_multi_geometries(curr_gdf)
+            try:
+                curr_gdf = split_multi_geometries(curr_gdf)
+            except Exception as e:
+                print(f"{e} during split_multi_geometries for {gj}")
+
+        if len(curr_gdf) == 0:
+            print(f"Removing multipolygons resulted in an empty gdf for {gj}")
+            continue
 
         curr_gdf["label_fname"] = gj
         curr_gdf["image_fname"] = ""
@@ -236,6 +247,9 @@ def geojson2coco(
             curr_gdf["category_str"] = "other"  # add arbitrary value
             tmp_category_attribute = "category_str"
         else:
+            if category_attribute not in curr_gdf.columns:
+                print(f"{category_attribute} not in curr_gdf.columns for {gj}")
+                continue
             tmp_category_attribute = category_attribute
         if do_matches:  # multiple images: multiple labels
             logger.debug("do_matches is True, finding matching image")

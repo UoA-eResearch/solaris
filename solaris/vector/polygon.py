@@ -133,6 +133,7 @@ def affine_transform_gdf(
     if "geometry" not in gdf.columns:
         gdf = gdf.rename(columns={geom_col: "geometry"})
     if not isinstance(gdf["geometry"].iloc[0], Polygon):
+        print(gdf)
         gdf["geometry"] = gdf["geometry"].apply(shapely.wkt.loads)
     gdf["geometry"] = gdf["geometry"].apply(
         convert_poly_coords, affine_obj=affine_obj, inverse=inverse
