@@ -591,7 +591,7 @@ def make_coco_image_dict(image_ref, license_id=None):
             height = f.height
         im_record = {
             "id": image_id,
-            "file_name": os.path.split(image_fname)[1],
+            "file_name": image_fname,
             "width": width,
             "height": height,
         }
